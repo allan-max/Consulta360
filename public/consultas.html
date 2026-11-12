@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultas | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container">
+      <div class="trilha"><a href="./">Inicio</a> / Consultas</div>
+      <h1>Catalogo de consultas</h1>
+      <p>Escolha entre consultas gratuitas de dados publicos e consultas licenciadas com creditos.</p>
+    </div>
+  </section>
+
+  <div class="container" style="padding-bottom:72px">
+    <div class="filtros">
+      <input type="search" id="busca" placeholder="Buscar por nome, documento ou tema..." aria-label="Buscar consulta">
+      <div class="chips" id="chips-preco" role="group" aria-label="Filtrar por preco">
+        <button class="chip" data-preco="todas" aria-pressed="true">Todas</button>
+        <button class="chip" data-preco="gratis" aria-pressed="false">Gratuitas</button>
+        <button class="chip" data-preco="cred" aria-pressed="false">Com creditos</button>
+      </div>
+    </div>
+    <div class="chips" id="chips-cat" role="group" aria-label="Filtrar por categoria" style="margin-bottom:24px"></div>
+    <p class="muted" id="contagem" style="font-size:14px"></p>
+    <div id="grupos"></div>
+  </div>
+</main>
+
+<script type="module">
+  import { api, icone, esc, cardConsulta, CATEGORIAS, iconeCategoria, $, $$ } from './js/layout.js';
+
+  const { consultas } = await api('/consultas');
+  const params = new URLSearchParams(location.search);
+  let cat = params.get('categoria') || 'Todas';
+  let preco = 'todas';
+
+  const cats = ['Todas', ...Object.keys(CATEGORIAS).filter((k) => consultas.some((c) => c.categoria === k))];
+  function chipsCat() {
+    $('#chips-cat').innerHTML = cats.map((c) => `<button class="chip" data-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('');
+  }
+
+  function desenhar() {
+    const termo = $('#busca').value.trim().toLowerCase();
+    const itens = consultas.filter((c) =>
+      (cat === 'Todas' || c.categoria === cat) &&
+      (preco === 'todas' || (preco === 'gratis' ? !c.custo : c.custo > 0)) &&
+      (!termo || `${c.titulo} ${c.descricao} ${c.categoria}`.toLowerCase().includes(termo)));
+
+    $('#contagem').textContent = `${itens.length} consulta${itens.length === 1 ? '' : 's'} encontrada${itens.length === 1 ? '' : 's'}`;
+    if (!itens.length) {
+      $('#grupos').innerHTML = `<div class="card resultado-vazio"><div class="icone-box">${icone('busca')}</div><h3>Nada encontrado</h3><p>Tente outro termo ou limpe os filtros.</p></div>`;
+      return;
+    }
+    const grupos = {};
+    itens.forEach((c) => (grupos[c.categoria] ||= []).push(c));
+    $('#grupos').innerHTML = Object.entries(grupos).map(([g, lista]) => `
+      <section style="margin-bottom:40px">
+        <h2 style="font-size:22px;display:flex;gap:10px;align-items:center">${icone(iconeCategoria(g))} ${esc(g)}</h2>
+        <div class="grade grade-auto">${lista.map(cardConsulta).join('')}</div>
+      </section>`).join('');
+  }
+
+  $('#chips-cat').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]');
+    if (!b) return;
+    cat = b.dataset.cat;
+    chipsCat();
+    desenhar();
+    history.replaceState(null, '', cat === 'Todas' ? 'consultas' : `consultas?categoria=${encodeURIComponent(cat)}`);
+  });
+  $('#chips-preco').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-preco]');
+    if (!b) return;
+    preco = b.dataset.preco;
+    $$('#chips-preco .chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    desenhar();
+  });
+  $('#busca').addEventListener('input', desenhar);
+  chipsCat();
+  desenhar();
+</script>
+</body>
+</html>

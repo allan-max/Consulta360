@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg-pessoas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <linearGradient id="az-pessoas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#1660d6"/>
+    </linearGradient>
+    <linearGradient id="lj-pessoas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb27a"/><stop offset="1" stop-color="#ff6b1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#bg-pessoas)"/>
+  <circle cx="422.4" cy="36" r="70" fill="#4da3ff" opacity=".18"/>
+  <circle cx="38.4" cy="270" r="90" fill="#ff6b1a" opacity=".10"/>
+  <ellipse cx="240" cy="266" rx="172.79999999999998" ry="14" fill="#0b2559" opacity=".08"/>
+  
+    <rect x="110" y="60" width="260" height="170" rx="16" fill="#ffffff" stroke="#c9d6ec" stroke-width="2"/>
+    <rect x="110" y="60" width="260" height="40" rx="16" fill="url(#az-pessoas)"/>
+    <rect x="110" y="84" width="260" height="16" fill="url(#az-pessoas)"/>
+    <text x="130" y="86" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#fff">CPF</text>
+    <circle cx="170" cy="150" r="32" fill="#e7f0ff"/>
+    <circle cx="170" cy="140" r="13" fill="#1660d6"/>
+    <path d="M146 172 q24 -26 48 0" fill="#1660d6"/>
+    <rect x="220" y="128" width="120" height="8" rx="4" fill="#c9d6ec"/><rect x="220" y="148" width="90" height="8" rx="4" fill="#c9d6ec"/><rect x="220" y="168" width="104" height="8" rx="4" fill="#c9d6ec"/>
+    <rect x="220" y="190" width="70" height="20" rx="10" fill="#22b07d" opacity=".18"/>
+    <text x="232" y="204" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#22b07d">REGULAR</text>
+    <g transform="translate(360 210)">
+      <path d="M0 -34 L28 -22 V2 C28 22 14 34 0 40 C-14 34 -28 22 -28 2 V-22 Z" fill="url(#lj-pessoas)"/>
+      <path d="m-11 2 8 8 15 -16" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+</svg>

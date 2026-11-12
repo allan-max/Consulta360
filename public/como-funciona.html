@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Como funciona | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container">
+      <div class="trilha"><a href="./">Inicio</a> / Como funciona</div>
+      <h1>Como funciona</h1>
+      <p>Do cadastro ao relatorio, entenda cada etapa e de onde vem cada informacao.</p>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="grade grade-4" style="row-gap:36px">
+        <div class="card passo"><span class="passo-num">1</span><h3>Crie sua conta</h3><p>Gratis e rapido. Necessaria apenas para consultas com creditos e para ter historico.</p></div>
+        <div class="card passo"><span class="passo-num">2</span><h3>Compre creditos</h3><p>Escolha um pacote. Sem mensalidade, sem fidelidade e sem prazo de validade.</p></div>
+        <div class="card passo"><span class="passo-num">3</span><h3>Consulte</h3><p>Escolha a consulta, informe o documento e, se envolver dados pessoais, a finalidade.</p></div>
+        <div class="card passo"><span class="passo-num">4</span><h3>Use o resultado</h3><p>Veja na tela, imprima ou baixe em JSON. Tudo fica no seu historico.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Fontes</span>
+        <h2>De onde vem os dados</h2>
+        <p>Trabalhamos so com fontes legitimas. Veja o que vem de cada uma.</p>
+      </div>
+      <div class="grade grade-2" id="fontes"></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Transparencia</span>
+        <h2>O que nos nao fazemos</h2>
+      </div>
+      <div class="grade grade-3" id="nao"></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="cta">
+        <div><h2>Pronto para comecar?</h2><p>Faca agora uma consulta gratuita, sem cadastro.</p></div>
+        <a class="btn btn-clara" href="consultas">Ver consultas</a>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module">
+  import { icone, $ } from './js/layout.js';
+  $('#fontes').innerHTML = [
+    ['escudo', 'Dados publicos oficiais', 'Receita Federal (CNPJ), Correios e bases de CEP, Banco Central (bancos, taxas e cambio), IBGE (municipios), FIPE, Registro.br e CVM, acessados pela BrasilAPI.', 'Gratuito'],
+    ['cadeado', 'Fornecedores licenciados', 'Situacao cadastral de CPF (Receita Federal) e dados de veiculos (Detran e Senatran) por meio de fornecedores com contrato, que exigem base legal para cada consulta.', 'Com creditos'],
+  ].map(([i, t, d, s], n) => `<div class="card card-com-img"><div class="card-img"><img src="img/ilustracoes/${n ? 'pessoas' : 'empresas'}.svg" alt="" loading="lazy"></div><div class="card-corpo"><div class="card-topo"><div class="icone-box">${icone(i)}</div><span class="selo ${s === 'Gratuito' ? 'selo-gratis' : 'selo-cred'}">${s}</span></div><h3 style="margin-top:14px">${t}</h3><p class="muted" style="margin:0">${d}</p></div></div>`).join('');
+  $('#nao').innerHTML = [
+    ['Nao usamos bases vazadas', 'Dados de vazamentos sao ilegais. Nao compramos, nao armazenamos e nao exibimos.'],
+    ['Nao emitimos CRV/CRLV', 'Somente o proprietario emite, no Detran ou na Carteira Digital de Transito.'],
+    ['Nao mostramos endereco e telefone de pessoas', 'Esses dados nao tem fonte publica legal para consulta por terceiros.'],
+  ].map(([t, d]) => `<div class="card"><div class="icone-box" style="margin-bottom:14px">${icone('escudo')}</div><h3>${t}</h3><p class="muted" style="margin:0">${d}</p></div>`).join('');
+</script>
+</body>
+</html>

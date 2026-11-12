@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perguntas frequentes | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container">
+      <div class="trilha"><a href="./">Inicio</a> / Ajuda</div>
+      <h1>Central de ajuda</h1>
+      <p>Respostas para as duvidas mais comuns sobre consultas, creditos, conta e privacidade.</p>
+    </div>
+  </section>
+  <div class="container" style="padding:48px 20px 72px">
+    <input type="search" id="busca" placeholder="Buscar uma pergunta..." style="max-width:820px;margin:0 auto 32px;display:block">
+    <div id="secoes"></div>
+    <div class="card" style="max-width:820px;margin:40px auto 0;text-align:center">
+      <h3>Nao achou sua resposta?</h3>
+      <p class="muted">Nossa equipe responde em ate 1 dia util.</p>
+      <a class="btn btn-primaria" href="contato">Falar com o suporte</a>
+    </div>
+  </div>
+</main>
+<script type="module">
+  import { esc, $, $$ } from './js/layout.js';
+  const FAQ = {
+    'Consultas': [
+      ['De onde vem os dados?', 'Dados publicos (CNPJ, CEP, FIPE, bancos, taxas, NCM) vem de bases oficiais abertas, como Receita Federal, Banco Central e IBGE, por meio da BrasilAPI. Consultas de CPF e veiculos vem de fornecedores licenciados com contrato e base legal.'],
+      ['Quais consultas sao gratuitas?', 'Todas as consultas de dados publicos: CNPJ, CEP, DDD, bancos, FIPE, NCM, dominios, taxas, cambio, municipios, feriados e ISBN. Elas nao precisam de cadastro.'],
+      ['O que aparece na consulta de CPF?', 'Nome e situacao cadastral na Receita Federal. Nao mostramos endereco, telefone ou parentes: esses dados nao tem fonte publica legal.'],
+      ['Voces emitem CRV ou CRLV?', 'Nao. O CRV e o CRLV so podem ser emitidos pelo proprietario do veiculo, no Detran do estado ou na Carteira Digital de Transito (gov.br). Aqui voce consulta dados, restricoes e debitos do veiculo.'],
+      ['Os dados estao sempre atualizados?', 'Consultamos a fonte no momento do pedido. A atualizacao depende de cada orgao: a base de CNPJ da Receita, por exemplo, e atualizada mensalmente.'],
+    ],
+    'Creditos e pagamento': [
+      ['Como funcionam os creditos?', 'Voce compra um pacote de creditos e cada consulta licenciada desconta um valor fixo, mostrado antes de consultar. Nao ha mensalidade.'],
+      ['Sou cobrado se a consulta der erro?', 'Nao. Em caso de erro ou de dado nao encontrado na fonte, os creditos voltam automaticamente para o seu saldo.'],
+      ['Os creditos expiram?', 'Nao. Eles ficam na sua conta ate serem usados.'],
+      ['Quando os creditos sao liberados?', 'Assim que o pagamento e confirmado. Voce acompanha o status em Minha conta > Creditos.'],
+    ],
+    'Conta e seguranca': [
+      ['Preciso de cadastro?', 'So para consultas com creditos e para ter historico. As consultas gratuitas funcionam sem conta.'],
+      ['Esqueci minha senha. E agora?', 'Fale com o suporte pela pagina de contato informando o e-mail da conta.'],
+      ['Posso excluir minha conta?', 'Sim. Peca pela pagina de contato e excluimos seus dados, exceto o que a lei obriga a manter.'],
+    ],
+    'LGPD e privacidade': [
+      ['Por que preciso informar a finalidade?', 'A LGPD exige uma base legal para tratar dados pessoais. Registramos a finalidade de cada consulta de CPF ou veiculo para prestar contas a fiscalizacao.'],
+      ['Voces vendem ou usam bases vazadas?', 'Nunca. Usamos apenas fontes oficiais e fornecedores licenciados. Vender ou usar dados vazados e crime.'],
+      ['Como voces protegem os dados consultados?', 'Nao guardamos o resultado das consultas. No historico e na auditoria, documentos de pessoas ficam mascarados.'],
+    ],
+  };
+  $('#secoes').innerHTML = Object.entries(FAQ).map(([secao, itens]) => `
+    <section class="faq-secao" style="max-width:820px;margin:0 auto 36px">
+      <h2 style="font-size:22px">${esc(secao)}</h2>
+      <div class="faq">${itens.map(([p, r]) => `<details><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>
+    </section>`).join('');
+  $('#busca').addEventListener('input', (e) => {
+    const t = e.target.value.toLowerCase();
+    $$('.faq-secao').forEach((s) => {
+      let visiveis = 0;
+      $$('details', s).forEach((d) => {
+        const ok = !t || d.textContent.toLowerCase().includes(t);
+        d.hidden = !ok;
+        d.open = Boolean(t) && ok;
+        if (ok) visiveis++;
+      });
+      s.hidden = !visiveis;
+    });
+  });
+</script>
+</body>
+</html>

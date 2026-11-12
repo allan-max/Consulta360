@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar conta | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main class="auth">
+  <div class="auth-lado">
+    <h2>Crie sua conta gratis</h2>
+    <p style="color:rgb(255 255 255/.8)">Em menos de um minuto voce tem acesso a todas as consultas e ao seu historico.</p>
+    <ul id="beneficios"></ul>
+    <img class="ilustra" src="img/ilustracoes/pessoas.svg" alt="" width="480" height="300">
+  </div>
+  <div class="auth-form">
+    <form class="card form" id="form" novalidate>
+      <h2 style="font-size:26px;margin:0">Criar conta</h2>
+      <p class="muted" style="margin:0">Ja tem conta? <a href="entrar">Entrar</a></p>
+      <label>Nome completo <input name="nome" autocomplete="name" required></label>
+      <label>E-mail <input name="email" type="email" autocomplete="email" required></label>
+      <label>Senha <input name="senha" type="password" autocomplete="new-password" minlength="8" required>
+        <small class="muted" style="font-weight:400">Minimo de 8 caracteres.</small></label>
+      <label class="check"><input type="checkbox" id="aceite"> Li e aceito os <a href="termos" target="_blank">Termos de uso</a> e a <a href="privacidade" target="_blank">Politica de privacidade</a>.</label>
+      <div id="msg"></div>
+      <button class="btn btn-primaria btn-bloco" type="submit">Criar conta</button>
+    </form>
+  </div>
+</main>
+<script type="module">
+  import { api, icone, esc, usuarioAtual, $ , MODO_ESTATICO } from './js/layout.js';
+  // Modo estatico: o layout mostra o aviso; este script para aqui sem erro.
+  if (MODO_ESTATICO) await new Promise(() => {});
+  if (await usuarioAtual()) location.replace('painel');
+
+  $('#beneficios').innerHTML = ['Consultas gratuitas ilimitadas', 'Historico salvo na sua conta', 'Creditos sem mensalidade', 'Dados protegidos pela LGPD']
+    .map((t) => `<li>${icone('check')} ${t}</li>`).join('');
+
+  $('#form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const corpo = Object.fromEntries(new FormData(e.target));
+    corpo.aceite = $('#aceite').checked;
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    try {
+      await api('/cadastro', { metodo: 'POST', corpo });
+      location.href = 'painel?bemvindo=1';
+    } catch (err) {
+      $('#msg').innerHTML = `<div class="alerta alerta-erro">${esc(err.message)}</div>`;
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

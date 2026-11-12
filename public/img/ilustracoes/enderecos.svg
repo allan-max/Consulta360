@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg-enderecos" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <linearGradient id="az-enderecos" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#1660d6"/>
+    </linearGradient>
+    <linearGradient id="lj-enderecos" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb27a"/><stop offset="1" stop-color="#ff6b1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#bg-enderecos)"/>
+  <circle cx="422.4" cy="36" r="70" fill="#4da3ff" opacity=".18"/>
+  <circle cx="38.4" cy="270" r="90" fill="#ff6b1a" opacity=".10"/>
+  <ellipse cx="240" cy="266" rx="172.79999999999998" ry="14" fill="#0b2559" opacity=".08"/>
+  
+    <path d="M70 90 l110 -30 120 30 110 -30 v160 l-110 30 -120 -30 -110 30 z" fill="#ffffff" stroke="#c9d6ec" stroke-width="2"/>
+    <path d="M180 60 v160 M300 90 v160" stroke="#c9d6ec" stroke-width="2"/>
+    <path d="M90 180 q60 -50 120 -10 t140 -40 q30 -10 50 10" fill="none" stroke="#4da3ff" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 12"/>
+    <g transform="translate(240 138)">
+      <path d="M0 50 C-30 14 -36 0 -36 -14 a36 36 0 1 1 72 0 C36 0 30 14 0 50 z" fill="url(#lj-enderecos)"/>
+      <circle cx="0" cy="-14" r="13" fill="#fff"/>
+    </g>
+    <rect x="300" y="40" width="130" height="44" rx="10" fill="#0b2559"/>
+    <text x="316" y="68" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#fff">01310-100</text>
+</svg>

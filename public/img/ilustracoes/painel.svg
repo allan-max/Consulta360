@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg-painel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <linearGradient id="az-painel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#1660d6"/>
+    </linearGradient>
+    <linearGradient id="lj-painel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb27a"/><stop offset="1" stop-color="#ff6b1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#bg-painel)"/>
+  <circle cx="422.4" cy="36" r="70" fill="#4da3ff" opacity=".18"/>
+  <circle cx="38.4" cy="270" r="90" fill="#ff6b1a" opacity=".10"/>
+  <ellipse cx="240" cy="266" rx="172.79999999999998" ry="14" fill="#0b2559" opacity=".08"/>
+  
+    <rect x="50" y="34" width="380" height="236" rx="14" fill="#ffffff" stroke="#c9d6ec" stroke-width="2"/>
+    <rect x="50" y="34" width="380" height="34" rx="14" fill="#0b2559"/>
+    <rect x="50" y="54" width="380" height="14" fill="#0b2559"/>
+    <circle cx="72" cy="51" r="5" fill="#ff6b1a"/><circle cx="88" cy="51" r="5" fill="#4da3ff"/><circle cx="104" cy="51" r="5" fill="#fff" opacity=".6"/>
+    <rect x="68" y="84" width="104" height="56" rx="8" fill="url(#az-painel)"/>
+      <rect x="80" y="96" width="44" height="7" rx="3.5" fill="#fff"/>
+      <text x="80" y="128" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#fff">30</text><rect x="186" y="84" width="104" height="56" rx="8" fill="#e7f0ff"/>
+      <rect x="198" y="96" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+      <text x="198" y="128" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#0b2559">128</text><rect x="304" y="84" width="104" height="56" rx="8" fill="#e7f0ff"/>
+      <rect x="316" y="96" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+      <text x="316" y="128" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#0b2559">12</text>
+    <rect x="68" y="156" width="340" height="18" rx="5" fill="#e7f0ff"/>
+      <rect x="78" y="161" width="120" height="8" rx="4" fill="#c9d6ec"/>
+      <rect x="350" y="159" width="46" height="12" rx="6" fill="#22b07d" opacity=".35"/><rect x="68" y="182" width="340" height="18" rx="5" fill="#f4f7fd"/>
+      <rect x="78" y="187" width="90" height="8" rx="4" fill="#c9d6ec"/>
+      <rect x="350" y="185" width="46" height="12" rx="6" fill="#22b07d" opacity=".35"/><rect x="68" y="208" width="340" height="18" rx="5" fill="#e7f0ff"/>
+      <rect x="78" y="213" width="140" height="8" rx="4" fill="#c9d6ec"/>
+      <rect x="350" y="211" width="46" height="12" rx="6" fill="#ff6b1a" opacity=".35"/><rect x="68" y="234" width="340" height="18" rx="5" fill="#f4f7fd"/>
+      <rect x="78" y="239" width="100" height="8" rx="4" fill="#c9d6ec"/>
+      <rect x="350" y="237" width="46" height="12" rx="6" fill="#22b07d" opacity=".35"/>
+    
+  <g transform="translate(420 236) scale(0.62)">
+    <line x1="34" y1="34" x2="62" y2="62" stroke="#0b2559" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="44" fill="#ffffff" stroke="#0b2559" stroke-width="10"/>
+    <rect x="-22" y="-16" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+    <rect x="-22" y="-2" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+    <rect x="-22" y="12" width="30" height="7" rx="3.5" fill="#c9d6ec"/>
+  </g>
+    <path d="M300 30 q 60 -46 130 -20" fill="none" stroke="url(#lj-painel)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M424 -6 l 22 16 -26 8 z" fill="#ff6b1a"/>
+</svg>

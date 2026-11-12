@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg-fiscal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <linearGradient id="az-fiscal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#1660d6"/>
+    </linearGradient>
+    <linearGradient id="lj-fiscal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb27a"/><stop offset="1" stop-color="#ff6b1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#bg-fiscal)"/>
+  <circle cx="422.4" cy="36" r="70" fill="#4da3ff" opacity=".18"/>
+  <circle cx="38.4" cy="270" r="90" fill="#ff6b1a" opacity=".10"/>
+  <ellipse cx="240" cy="266" rx="172.79999999999998" ry="14" fill="#0b2559" opacity=".08"/>
+  
+    <rect x="150" y="50" width="180" height="220" rx="12" fill="#ffffff" stroke="#c9d6ec" stroke-width="2"/>
+    <rect x="150" y="50" width="180" height="46" rx="12" fill="url(#az-fiscal)"/>
+    <rect x="150" y="80" width="180" height="16" fill="url(#az-fiscal)"/>
+    <text x="170" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#fff">NCM</text>
+    <text x="170" y="128" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#0b2559">8471.30.12</text>
+    <rect x="170" y="146" width="140" height="8" rx="4" fill="#c9d6ec"/><rect x="170" y="164" width="120" height="8" rx="4" fill="#c9d6ec"/><rect x="170" y="182" width="132" height="8" rx="4" fill="#c9d6ec"/><rect x="170" y="200" width="90" height="8" rx="4" fill="#c9d6ec"/>
+    <rect x="170" y="226" width="60" height="22" rx="11" fill="#ff6b1a" opacity=".18"/>
+    <text x="200" y="241" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#ff6b1a">FISCAL</text>
+    <rect x="96" y="120" width="44" height="56" rx="6" fill="#e7f0ff" stroke="#c9d6ec"/>
+    <rect x="340" y="104" width="44" height="56" rx="6" fill="#e7f0ff" stroke="#c9d6ec"/>
+    
+  <g transform="translate(370 200) scale(0.7)">
+    <line x1="34" y1="34" x2="62" y2="62" stroke="#0b2559" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="44" fill="#ffffff" stroke="#0b2559" stroke-width="10"/>
+    <rect x="-22" y="-16" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+    <rect x="-22" y="-2" width="44" height="7" rx="3.5" fill="#c9d6ec"/>
+    <rect x="-22" y="12" width="30" height="7" rx="3.5" fill="#c9d6ec"/>
+  </g>
+</svg>

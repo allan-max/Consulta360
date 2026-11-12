@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main class="auth">
+  <div class="auth-lado">
+    <h2>Bem-vindo de volta</h2>
+    <p style="color:rgb(255 255 255/.8)">Acesse sua conta para ver seu saldo, historico e fazer consultas licenciadas.</p>
+    <ul id="beneficios"></ul>
+    <img class="ilustra" src="img/ilustracoes/painel.svg" alt="" width="480" height="300">
+  </div>
+  <div class="auth-form">
+    <form class="card form" id="form" novalidate>
+      <h2 style="font-size:26px;margin:0">Entrar</h2>
+      <p class="muted" style="margin:0">Nao tem conta? <a href="cadastro">Cadastre-se gratis</a></p>
+      <label>E-mail <input name="email" type="email" autocomplete="email" required></label>
+      <label>Senha <input name="senha" type="password" autocomplete="current-password" required></label>
+      <div id="msg"></div>
+      <button class="btn btn-primaria btn-bloco" type="submit">Entrar</button>
+      <p class="muted" style="font-size:13px;margin:0;text-align:center">Esqueceu a senha? <a href="contato?assunto=Recuperar%20senha">Fale com o suporte</a></p>
+    </form>
+  </div>
+</main>
+<script type="module">
+  import { api, icone, esc, usuarioAtual, $ , MODO_ESTATICO } from './js/layout.js';
+  // Modo estatico: o layout mostra o aviso; este script para aqui sem erro.
+  if (MODO_ESTATICO) await new Promise(() => {});
+  const voltar = new URLSearchParams(location.search).get('voltar');
+  // So aceita pagina interna (ex.: consulta?id=cpf), nunca outro dominio.
+  const destino = voltar && /^[a-z0-9-]+(\?[\w=&%.-]*)?$/.test(voltar) ? voltar : 'painel';
+  if (await usuarioAtual()) location.replace(destino);
+
+  $('#beneficios').innerHTML = ['Historico de todas as consultas', 'Saldo e compras em um so lugar', 'Consultas licenciadas de CPF e veiculos']
+    .map((t) => `<li>${icone('check')} ${t}</li>`).join('');
+
+  $('#form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    try {
+      await api('/entrar', { metodo: 'POST', corpo: Object.fromEntries(new FormData(e.target)) });
+      location.href = destino;
+    } catch (err) {
+      $('#msg').innerHTML = `<div class="alerta alerta-erro">${esc(err.message)}</div>`;
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

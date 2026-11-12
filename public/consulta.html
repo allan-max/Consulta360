@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consulta | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container cabecalho-grade">
+      <div>
+        <div class="trilha"><a href="./">Inicio</a> / <a href="consultas">Consultas</a> / <span id="trilha-nome"></span></div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <h1 id="titulo" style="margin:0">Carregando...</h1>
+          <span id="selo"></span>
+        </div>
+        <p id="descricao" style="margin-top:10px"></p>
+      </div>
+      <img class="cabecalho-img" id="cab-img" alt="" width="480" height="300">
+    </div>
+  </section>
+
+  <div class="container" style="padding-bottom:72px">
+    <div class="layout-consulta">
+      <aside>
+        <form class="card form" id="form" novalidate>
+          <h3 style="margin:0">Dados da consulta</h3>
+          <div id="campos" class="form"></div>
+          <div id="lgpd" class="form" hidden>
+            <label>Finalidade (LGPD)
+              <select name="finalidade" id="finalidade"></select>
+            </label>
+            <label class="check"><input type="checkbox" id="aceite"> Declaro que tenho base legal para tratar estes dados e estou ciente de que a consulta fica registrada.</label>
+          </div>
+          <div id="aviso"></div>
+          <button class="btn btn-primaria btn-bloco" id="enviar" type="submit">Consultar</button>
+        </form>
+        <div class="card">
+          <h3 style="font-size:15px">Sobre esta consulta</h3>
+          <ul class="lista-info" id="info"></ul>
+        </div>
+      </aside>
+
+      <section class="card" id="resultado" aria-live="polite">
+        <div class="resultado-vazio">
+          <img class="vazio-img" id="vazio-img" alt="" width="480" height="300">
+          <h3>Seu resultado aparece aqui</h3>
+          <p>Preencha os dados ao lado e clique em Consultar.</p>
+        </div>
+      </section>
+    </div>
+
+    <section style="margin-top:56px">
+      <h2 style="font-size:22px">Consultas relacionadas</h2>
+      <div class="grade grade-3" id="relacionadas"></div>
+    </section>
+  </div>
+</main>
+
+<script type="module">
+  import { api, icone, esc, cardConsulta, seloConsulta, iconeCategoria, imagemCategoria, mascaras, usuarioAtual, atualizarSaldo, toast, $ } from './js/layout.js';
+
+  const params = new URLSearchParams(location.search);
+  const { consultas, finalidades } = await api('/consultas');
+  const c = consultas.find((x) => x.id === params.get('id'));
+  if (!c) { location.replace('404'); throw new Error('Consulta inexistente'); }
+
+  document.title = `${c.titulo} | Consulta360`;
+  $('#trilha-nome').textContent = c.titulo;
+  $('#titulo').textContent = c.titulo;
+  $('#selo').innerHTML = seloConsulta(c);
+  $('#descricao').textContent = c.descricao;
+  $('#vazio-img').src = imagemCategoria(c.categoria);
+  $('#cab-img').src = imagemCategoria(c.categoria);
+
+  // Campos
+  $('#campos').innerHTML = c.campos.map((f) => {
+    const val = esc(params.get(f.nome) || '');
+    const ctrl = f.opcoes
+      ? `<select name="${f.nome}">${f.opcoes.map((o) => `<option${o === val ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>`
+      : `<input name="${f.nome}" type="${f.tipo || 'text'}" placeholder="${esc(f.placeholder || '')}" value="${val}" autocomplete="off"${f.opcional ? '' : ' required'}${f.mascara ? ` data-mascara="${f.mascara}"` : ''}>`;
+    return `<label>${esc(f.rotulo)}${ctrl}</label>`;
+  }).join('');
+  $('#campos').addEventListener('input', (e) => {
+    const m = e.target.dataset.mascara;
+    if (m) e.target.value = mascaras[m](e.target.value);
+  });
+  document.querySelectorAll('[data-mascara]').forEach((i) => { i.value = mascaras[i.dataset.mascara](i.value); });
+
+  if (c.lgpd) {
+    $('#lgpd').hidden = false;
+    $('#finalidade').innerHTML = '<option value="">Selecione...</option>' + finalidades.map((f) => `<option>${esc(f)}</option>`).join('');
+  }
+
+  const usuario = await usuarioAtual();
+  const avisos = [];
+  if (!c.disponivel) avisos.push(['aviso', 'Esta consulta depende de um fornecedor licenciado que ainda nao foi ativado. Volte em breve.']);
+  else if (c.custo && !usuario) avisos.push(['info', `Esta consulta custa ${c.custo} creditos. <a href="entrar?voltar=${encodeURIComponent(`consulta${location.search}`)}">Entre</a> ou <a href="cadastro">crie sua conta</a>.`]);
+  else if (c.custo && usuario.creditos < c.custo) avisos.push(['aviso', `Saldo insuficiente (${usuario.creditos} creditos). <a href="planos">Comprar creditos</a>.`]);
+  $('#aviso').innerHTML = avisos.map(([t, m]) => `<div class="alerta alerta-${t}">${icone('info')}<span>${m}</span></div>`).join('');
+  $('#enviar').innerHTML = `${icone('busca')} Consultar${c.custo ? ` (${c.custo} creditos)` : ''}`;
+  $('#enviar').disabled = !c.disponivel;
+
+  // Informacoes
+  $('#info').innerHTML = [
+    ['moeda', c.custo ? `Custo: ${c.custo} creditos (cobrado so em caso de sucesso)` : 'Gratuita, sem cadastro'],
+    ['escudo', c.fonte === 'publica' ? 'Fonte: dados publicos oficiais (BrasilAPI)' : 'Fonte: fornecedor licenciado'],
+    ['relogio', 'Resultado em poucos segundos'],
+    ...(c.lgpd ? [['cadeado', 'Envolve dados pessoais: exige finalidade e fica registrada']] : []),
+  ].map(([i, t]) => `<li>${icone(i)}<span>${t}</span></li>`).join('');
+
+  // Relacionadas
+  const rel = consultas.filter((x) => x.id !== c.id && x.categoria === c.categoria);
+  const extra = consultas.filter((x) => x.id !== c.id && x.categoria !== c.categoria);
+  $('#relacionadas').innerHTML = [...rel, ...extra].slice(0, 3).map(cardConsulta).join('');
+
+  // Resultado
+  const rotulo = (k) => String(k).replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^\w/, (m) => m.toUpperCase());
+  function tabela(v) {
+    if (v === null || v === undefined || v === '') return '<span class="muted">—</span>';
+    if (typeof v === 'boolean') return v ? 'Sim' : 'Nao';
+    if (typeof v !== 'object') return esc(v);
+    if (Array.isArray(v)) {
+      if (!v.length) return '<span class="muted">—</span>';
+      if (v.every((x) => typeof x !== 'object')) return esc(v.join(', '));
+      return v.map((x) => `<div class="sub-item">${tabela(x)}</div>`).join('');
+    }
+    return `<table class="tabela-dados">${Object.entries(v).map(([k, x]) => `<tr><th>${esc(rotulo(k))}</th><td>${tabela(x)}</td></tr>`).join('')}</table>`;
+  }
+
+  let ultimo = null;
+  function mostrar(dados) {
+    ultimo = dados;
+    $('#resultado').innerHTML = `
+      <div class="res-topo">
+        <h3>${icone('check')} Resultado</h3>
+        <div class="res-acoes">
+          <button class="btn btn-secundaria btn-peq" id="b-copiar">${icone('copiar')} Copiar</button>
+          <button class="btn btn-secundaria btn-peq" id="b-baixar">${icone('baixar')} JSON</button>
+          <button class="btn btn-secundaria btn-peq" id="b-imprimir">${icone('imprimir')} Imprimir</button>
+        </div>
+      </div>
+      <p class="muted" style="font-size:13px">Consultado em ${new Date().toLocaleString('pt-BR')}</p>
+      ${tabela(dados)}`;
+    $('#b-copiar').onclick = async () => { await navigator.clipboard.writeText(JSON.stringify(ultimo, null, 2)); toast('Copiado.'); };
+    $('#b-baixar').onclick = () => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(ultimo, null, 2)], { type: 'application/json' }));
+      a.download = `consulta-${c.id}-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+    $('#b-imprimir').onclick = () => window.print();
+  }
+
+  function erroResultado(msg) {
+    $('#resultado').innerHTML = `<div class="alerta alerta-erro">${icone('info')}<span>${esc(msg)}</span></div>`;
+  }
+
+  $('#form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const dados = Object.fromEntries(new FormData(e.target));
+    for (const f of c.campos) {
+      if (!f.opcional && !String(dados[f.nome] || '').trim()) return erroResultado(`Preencha o campo: ${f.rotulo}.`);
+    }
+    if (c.lgpd) {
+      if (!dados.finalidade) return erroResultado('Selecione a finalidade da consulta.');
+      if (!$('#aceite').checked) return erroResultado('Confirme a declaracao de base legal.');
+    } else delete dados.finalidade;
+
+    const btn = $('#enviar');
+    const txt = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = 'Consultando...';
+    $('#resultado').innerHTML = '<div class="resultado-vazio"><h3>Consultando...</h3><p>Aguarde alguns segundos.</p></div>';
+    try {
+      const r = await api(`/consultas/${c.id}`, { metodo: 'POST', corpo: dados });
+      mostrar(r.dados);
+      atualizarSaldo(r.saldo);
+    } catch (err) {
+      erroResultado(err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = txt;
+    }
+  });
+
+  // Vindo da busca rapida com o valor preenchido: consulta gratuita roda direto.
+  if (c.disponivel && !c.custo && c.campos.some((f) => params.get(f.nome))
+      && c.campos.every((f) => f.opcional || f.opcoes || params.get(f.nome))) {
+    $('#form').requestSubmit();
+  }
+</script>
+</body>
+</html>

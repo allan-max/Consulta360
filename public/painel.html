@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha conta | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main class="container">
+  <div class="painel">
+    <nav class="painel-menu" id="menu-painel" role="tablist" aria-label="Minha conta"></nav>
+    <div id="conteudo"></div>
+  </div>
+</main>
+
+<script type="module">
+  import { api, icone, esc, reais, dataHora, toast, usuarioAtual, sair, atualizarSaldo, $, $$ , MODO_ESTATICO } from './js/layout.js';
+  // Modo estatico: o layout mostra o aviso; este script para aqui sem erro.
+  if (MODO_ESTATICO) await new Promise(() => {});
+
+  const u = await usuarioAtual();
+  if (!u) { location.replace('entrar?voltar=painel'); throw new Error('sem sessao'); }
+
+  const { consultas, planos } = await api('/consultas');
+  const nomeConsulta = (id) => consultas.find((c) => c.id === id)?.titulo || id;
+  const params = new URLSearchParams(location.search);
+
+  const ABAS = [
+    ['geral', 'grafico', 'Visao geral'],
+    ['historico', 'historico', 'Historico'],
+    ['creditos', 'moeda', 'Creditos'],
+    ['conta', 'config', 'Minha conta'],
+  ];
+  $('#menu-painel').innerHTML = ABAS.map(([id, ic, t]) =>
+    `<button role="tab" data-aba="${id}" aria-selected="false">${icone(ic)} ${t}</button>`).join('')
+    + `<button id="b-sair">${icone('sair')} Sair</button>`;
+  $('#b-sair').onclick = sair;
+  $('#menu-painel').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-aba]');
+    if (b) abrir(b.dataset.aba);
+  });
+
+  function linhaHistorico(h) {
+    return `<tr>
+      <td>${dataHora(h.criado_em)}</td>
+      <td><a href="consulta?id=${h.consulta}">${esc(nomeConsulta(h.consulta))}</a></td>
+      <td>${esc(h.alvo)}</td>
+      <td>${h.custo ? `${h.custo}` : '<span class="muted">0</span>'}</td>
+      <td>${h.sucesso ? '<span class="selo selo-ok">Sucesso</span>' : '<span class="selo selo-erro">Falhou</span>'}</td>
+    </tr>`;
+  }
+  const tabelaHistorico = (itens) => itens.length
+    ? `<div class="tabela-wrap"><table class="tabela"><thead><tr><th>Data</th><th>Consulta</th><th>Dado consultado</th><th>Creditos</th><th>Status</th></tr></thead><tbody>${itens.map(linhaHistorico).join('')}</tbody></table></div>`
+    : `<div class="resultado-vazio"><div class="icone-box">${icone('historico')}</div><h3>Nenhuma consulta ainda</h3><p><a href="consultas">Fazer minha primeira consulta</a></p></div>`;
+
+  const telas = {
+    async geral() {
+      const { usuario, resumo, porTipo } = await api('/painel');
+      const { itens } = await api('/historico?limite=5');
+      const max = Math.max(1, ...porTipo.map((p) => p.n));
+      return `
+        ${params.get('bemvindo') ? `<div class="alerta alerta-ok" style="margin-bottom:18px">${icone('check')} Conta criada! Explore as <a href="consultas">consultas gratuitas</a> ou compre creditos para as licenciadas.</div>` : ''}
+        <h1 style="font-size:28px">Ola, ${esc(usuario.nome.split(' ')[0])}</h1>
+        <p class="muted">Cliente desde ${dataHora(usuario.criado_em).split(',')[0]}</p>
+        <div class="kpis">
+          <div class="card kpi"><span>Saldo atual</span><strong>${usuario.creditos}</strong><span>creditos</span></div>
+          <div class="card kpi"><span>Consultas totais</span><strong>${resumo.total}</strong><span>${resumo.sucesso} com sucesso</span></div>
+          <div class="card kpi"><span>Ultimos 30 dias</span><strong>${resumo.mes}</strong><span>consultas</span></div>
+          <div class="card kpi"><span>Creditos usados</span><strong>${resumo.gastos}</strong><span>no total</span></div>
+        </div>
+        <div class="grade grade-2" style="margin-bottom:20px">
+          <div class="card">
+            <h3>Consultas mais usadas</h3>
+            ${porTipo.length ? porTipo.map((p) => `
+              <div class="uso-linha"><span>${esc(nomeConsulta(p.consulta))}</span><div class="barra"><i style="width:${(p.n / max) * 100}%"></i></div><strong>${p.n}</strong></div>`).join('')
+              : '<p class="muted">Sem dados ainda.</p>'}
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;gap:12px">
+            <h3>Acoes rapidas</h3>
+            <a class="btn btn-primaria" href="consultas">${icone('busca')} Nova consulta</a>
+            <button class="btn btn-secundaria" data-ir="creditos">${icone('carrinho')} Comprar creditos</button>
+            <button class="btn btn-secundaria" data-ir="historico">${icone('historico')} Ver historico</button>
+          </div>
+        </div>
+        <div class="card"><h3>Ultimas consultas</h3>${tabelaHistorico(itens)}</div>`;
+    },
+
+    async historico() {
+      const { itens } = await api('/historico?limite=200');
+      return `
+        <h1 style="font-size:28px">Historico</h1>
+        <p class="muted">Ultimas ${itens.length} consultas. Documentos de pessoas aparecem mascarados.</p>
+        <div class="card">
+          <input type="search" id="filtro-hist" placeholder="Filtrar historico..." style="margin-bottom:14px">
+          <div id="tabela-hist">${tabelaHistorico(itens)}</div>
+        </div>`;
+    },
+
+    async creditos() {
+      const { itens } = await api('/pedidos');
+      const status = { pendente: 'selo-pend', pago: 'selo-ok', cancelado: 'selo-erro' };
+      return `
+        <h1 style="font-size:28px">Creditos</h1>
+        <p class="muted">Saldo atual: <strong>${u.creditos} creditos</strong></p>
+        <div class="planos" style="margin:28px 0">
+          ${planos.map((p) => `
+            <div class="card plano${p.destaque || params.get('plano') === p.id ? ' destaque' : ''}">
+              <h3>${esc(p.nome)}</h3>
+              <div class="plano-preco">${reais(p.valor_centavos)}</div>
+              <span class="plano-unit">${p.creditos} creditos</span>
+              <button class="btn btn-primaria btn-bloco" data-comprar="${p.id}">${icone('carrinho')} Comprar</button>
+            </div>`).join('')}
+        </div>
+        <div class="card">
+          <h3>Meus pedidos</h3>
+          ${itens.length ? `<div class="tabela-wrap"><table class="tabela"><thead><tr><th>Pedido</th><th>Data</th><th>Plano</th><th>Creditos</th><th>Valor</th><th>Status</th></tr></thead><tbody>
+            ${itens.map((p) => `<tr><td>#${p.id}</td><td>${dataHora(p.criado_em)}</td><td>${esc(p.plano)}</td><td>${p.creditos}</td><td>${reais(p.valor_centavos)}</td><td><span class="selo ${status[p.status] || ''}">${esc(p.status)}</span></td></tr>`).join('')}
+          </tbody></table></div>` : '<p class="muted">Nenhum pedido ainda.</p>'}
+        </div>`;
+    },
+
+    async conta() {
+      return `
+        <h1 style="font-size:28px">Minha conta</h1>
+        <div class="grade grade-2">
+          <form class="card form" id="form-conta">
+            <h3>Dados pessoais</h3>
+            <label>Nome <input name="nome" value="${esc(u.nome)}" required></label>
+            <label>E-mail <input value="${esc(u.email)}" disabled></label>
+            <h3 style="margin-top:10px">Alterar senha</h3>
+            <label>Senha atual <input name="senha_atual" type="password" autocomplete="current-password"></label>
+            <label>Nova senha <input name="nova_senha" type="password" autocomplete="new-password" minlength="8"></label>
+            <div id="msg-conta"></div>
+            <button class="btn btn-primaria" type="submit">Salvar alteracoes</button>
+          </form>
+          <div class="card">
+            <h3>Privacidade (LGPD)</h3>
+            <p class="muted">Voce pode pedir acesso, correcao ou exclusao dos seus dados a qualquer momento.</p>
+            <a class="btn btn-secundaria" href="contato?assunto=Exclusao%20de%20dados">Solicitar exclusao da conta</a>
+            <p class="muted" style="margin-top:18px;font-size:13px">Saiba mais na <a href="privacidade">Politica de privacidade</a>.</p>
+          </div>
+        </div>`;
+    },
+  };
+
+  async function abrir(aba) {
+    if (!telas[aba]) aba = 'geral';
+    $$('#menu-painel [data-aba]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.aba === aba)));
+    $('#conteudo').innerHTML = '<p class="muted">Carregando...</p>';
+    try {
+      $('#conteudo').innerHTML = await telas[aba]();
+    } catch (err) {
+      $('#conteudo').innerHTML = `<div class="alerta alerta-erro">${esc(err.message)}</div>`;
+      return;
+    }
+    history.replaceState(null, '', aba === 'geral' ? 'painel' : `painel?aba=${aba}`);
+    ligar(aba);
+  }
+
+  function ligar(aba) {
+    $$('[data-ir]').forEach((b) => { b.onclick = () => abrir(b.dataset.ir); });
+
+    if (aba === 'historico') {
+      $('#filtro-hist').addEventListener('input', (e) => {
+        const t = e.target.value.toLowerCase();
+        $$('#tabela-hist tbody tr').forEach((tr) => { tr.hidden = !tr.textContent.toLowerCase().includes(t); });
+      });
+    }
+
+    if (aba === 'creditos') {
+      $$('[data-comprar]').forEach((b) => {
+        b.onclick = async () => {
+          b.disabled = true;
+          try {
+            const r = await api('/pedidos', { metodo: 'POST', corpo: { plano: b.dataset.comprar } });
+            toast(`Pedido #${r.pedido} criado. Os creditos sao liberados apos a confirmacao do pagamento.`);
+            abrir('creditos');
+          } catch (err) {
+            toast(err.message);
+            b.disabled = false;
+          }
+        };
+      });
+    }
+
+    if (aba === 'conta') {
+      $('#form-conta').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const corpo = Object.fromEntries(new FormData(e.target));
+        try {
+          await api('/eu', { metodo: 'PUT', corpo });
+          u.nome = corpo.nome;
+          $('#msg-conta').innerHTML = `<div class="alerta alerta-ok">${icone('check')} Dados atualizados.</div>`;
+          e.target.senha_atual.value = '';
+          e.target.nova_senha.value = '';
+        } catch (err) {
+          $('#msg-conta').innerHTML = `<div class="alerta alerta-erro">${esc(err.message)}</div>`;
+        }
+      });
+    }
+  }
+
+  atualizarSaldo(u.creditos);
+  abrir(params.get('aba') || 'geral');
+</script>
+</body>
+</html>

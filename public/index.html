@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consulta360 | CNPJ, CPF, veiculos e mais</title>
+  <meta name="description" content="Consulte CNPJ, CPF, placa, CEP, FIPE, bancos e muito mais em um so lugar, com fontes oficiais e conformidade com a LGPD.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div class="container">
+      <div>
+        <span class="pilula" id="hero-pilula">Fontes oficiais e fornecedores licenciados</span>
+        <h1>Todas as suas consultas em um so lugar</h1>
+        <p class="lead">CNPJ, CPF, veiculos, CEP, tabela FIPE, bancos, taxas e muito mais. Resultado em segundos, historico organizado e total conformidade com a LGPD.</p>
+        <div class="hero-acoes">
+          <a class="btn btn-clara" href="consultas">Ver todas as consultas</a>
+          <a class="btn btn-laranja" href="cadastro">Criar conta gratis</a>
+        </div>
+        <div class="hero-selos" id="hero-selos"></div>
+      </div>
+      <form class="hero-card form" id="busca-rapida">
+        <h3>Consulta rapida</h3>
+        <label>Tipo de consulta
+          <select id="br-tipo"></select>
+        </label>
+        <label id="br-rotulo">Documento
+          <input id="br-valor" autocomplete="off" required>
+        </label>
+        <button class="btn btn-laranja btn-bloco" type="submit"></button>
+        <small style="color:rgb(255 255 255/.7)">Consultas gratuitas nao precisam de cadastro.</small>
+      </form>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="numeros" id="numeros"></div>
+  </div>
+
+  <section class="secao">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Categorias</span>
+        <h2>Encontre a consulta certa</h2>
+        <p>Organizamos as consultas por tema para voce achar rapido o que precisa.</p>
+      </div>
+      <div class="grade grade-4" id="categorias"></div>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Mais usadas</span>
+        <h2>Consultas populares</h2>
+        <p>As consultas que nossos clientes mais fazem no dia a dia.</p>
+      </div>
+      <div class="grade grade-3" id="populares"></div>
+      <p style="text-align:center;margin-top:28px"><a class="btn btn-secundaria" href="consultas">Ver catalogo completo <span id="ic-seta"></span></a></p>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Como funciona</span>
+        <h2>Tres passos e pronto</h2>
+      </div>
+      <div class="grade grade-3" style="row-gap:36px">
+        <div class="card passo"><span class="passo-num">1</span><h3>Escolha a consulta</h3><p>Navegue pelo catalogo ou use a busca rapida. Muitas consultas sao gratuitas.</p></div>
+        <div class="card passo"><span class="passo-num">2</span><h3>Informe os dados</h3><p>Digite o documento. Para dados pessoais, informe tambem a finalidade, como exige a LGPD.</p></div>
+        <div class="card passo"><span class="passo-num">3</span><h3>Receba o resultado</h3><p>Veja o relatorio na tela, imprima, baixe em JSON e consulte depois no historico.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Por que nos</span>
+        <h2>Feito para quem precisa de dados confiaveis</h2>
+      </div>
+      <div class="grade grade-3" id="vantagens"></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container split">
+      <img class="ilustra" src="img/ilustracoes/painel.svg" alt="Painel do cliente Consulta360 com saldo e historico" width="480" height="300" loading="lazy">
+      <div>
+        <span class="sobrelinha">Seu painel</span>
+        <h2>Tudo organizado em um so lugar</h2>
+        <p class="muted" style="font-size:17px">Acompanhe saldo, historico e pedidos no painel do cliente. Cada consulta fica registrada para voce conferir quando quiser.</p>
+        <ul class="lista-info" id="painel-itens"></ul>
+        <a class="btn btn-primaria" href="cadastro" style="margin-top:22px">Criar conta gratis</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao alt">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Planos</span>
+        <h2>Pague so pelo que usar</h2>
+        <p>Creditos pre-pagos, sem mensalidade e sem fidelidade. Consultas publicas sao sempre gratuitas.</p>
+      </div>
+      <div class="planos" id="planos"></div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="secao-topo">
+        <span class="sobrelinha">Duvidas</span>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <div class="faq">
+        <details><summary>De onde vem os dados?</summary><p>Dados publicos (CNPJ, CEP, FIPE, bancos) vem de bases oficiais abertas, como a Receita Federal e o Banco Central, via BrasilAPI. Dados pessoais e veiculares vem de fornecedores licenciados com contrato.</p></details>
+        <details><summary>Preciso de cadastro?</summary><p>Nao para as consultas gratuitas. Para consultas com creditos e para ter historico, crie uma conta gratis.</p></details>
+        <details><summary>Voces emitem CRV ou CRLV?</summary><p>Nao. Esses documentos so podem ser emitidos pelo proprietario do veiculo, no Detran do estado ou na Carteira Digital de Transito (gov.br).</p></details>
+      </div>
+      <p style="text-align:center;margin-top:24px"><a href="faq">Ver todas as perguntas</a></p>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="cta">
+        <div>
+          <h2>Comece agora, e gratis</h2>
+          <p>Crie sua conta em menos de um minuto e tenha historico de todas as suas consultas.</p>
+        </div>
+        <a class="btn btn-laranja" href="cadastro">Criar minha conta</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { api, icone, esc, cardConsulta, CATEGORIAS, imagemCategoria, reais, mascaras, $ } from './js/layout.js';
+  import { cardPlano } from './js/planos.js';
+
+  $('#ic-seta').outerHTML = icone('seta');
+  $('#busca-rapida button').innerHTML = `${icone('busca')} Consultar`;
+  $('#hero-selos').innerHTML = [
+    ['escudo', 'Conforme a LGPD'], ['raio', 'Resultado em segundos'], ['cadeado', 'Conexao segura'],
+  ].map(([i, t]) => `<span>${icone(i)} ${t}</span>`).join('');
+
+  $('#vantagens').innerHTML = [
+    ['escudo', 'Fontes legitimas', 'Somente bases oficiais e fornecedores licenciados. Nada de bases vazadas.'],
+    ['raio', 'Respostas rapidas', 'Integracao direta com as fontes, com resposta em poucos segundos.'],
+    ['historico', 'Historico completo', 'Todas as consultas ficam salvas na sua conta para conferir depois.'],
+    ['moeda', 'Sem mensalidade', 'Creditos pre-pagos. Cobramos so consultas com sucesso.'],
+    ['cadeado', 'Privacidade', 'Documentos de pessoas ficam mascarados no historico e na auditoria.'],
+    ['api', 'Pronto para integrar', 'Plano Empresarial com acesso a API para seus sistemas.'],
+  ].map(([i, t, d]) => `<div class="card"><div class="icone-box" style="margin-bottom:14px">${icone(i)}</div><h3>${t}</h3><p class="muted" style="margin:0">${d}</p></div>`).join('');
+
+  $('#painel-itens').innerHTML = [
+    ['moeda', 'Saldo de creditos sempre visivel'],
+    ['historico', 'Historico com busca e status de cada consulta'],
+    ['baixar', 'Resultados em tela, impressao ou JSON'],
+    ['cadeado', 'Documentos de pessoas mascarados'],
+  ].map(([i, t]) => `<li>${icone(i)}<span>${t}</span></li>`).join('');
+
+  const { consultas, planos } = await api('/consultas');
+
+  // Numeros
+  const gratis = consultas.filter((c) => !c.custo).length;
+  $('#numeros').innerHTML = [
+    [consultas.length, 'tipos de consulta'],
+    [gratis, 'consultas gratuitas'],
+    [Object.keys(CATEGORIAS).length, 'categorias'],
+    ['24h', 'disponivel todos os dias'],
+  ].map(([n, t]) => `<div class="numero"><strong>${n}</strong><span>${t}</span></div>`).join('');
+
+  // Categorias
+  const porCat = {};
+  consultas.forEach((c) => { porCat[c.categoria] = (porCat[c.categoria] || 0) + 1; });
+  $('#categorias').innerHTML = Object.entries(CATEGORIAS).filter(([k]) => porCat[k]).map(([k, v]) => `
+    <a class="card card-link card-com-img cat-img-card" href="consultas?categoria=${encodeURIComponent(k)}">
+      <div class="card-img"><img src="${imagemCategoria(k)}" alt="" loading="lazy" width="480" height="300"></div>
+      <div class="card-corpo">
+        <div class="card-titulo"><span class="icone-mini">${icone(v.icone)}</span><h3>${k}</h3></div>
+        <span>${porCat[k]} consulta${porCat[k] > 1 ? 's' : ''} &middot; ${v.texto}</span>
+      </div>
+    </a>`).join('');
+
+  // Populares
+  const populares = ['cnpj', 'cpf', 'placa', 'fipe', 'cep', 'banco'];
+  $('#populares').innerHTML = populares.map((id) => consultas.find((c) => c.id === id)).filter(Boolean).map(cardConsulta).join('');
+
+  // Planos
+  $('#planos').innerHTML = planos.map(cardPlano).join('');
+
+  // Busca rapida
+  const rapidas = consultas.filter((c) => c.campos.length >= 1 && !c.campos[0].opcoes && c.campos[0].tipo !== 'date');
+  const sel = $('#br-tipo');
+  sel.innerHTML = rapidas.map((c) => `<option value="${c.id}">${esc(c.titulo)}${c.custo ? ` (${c.custo} creditos)` : ''}</option>`).join('');
+  const input = $('#br-valor');
+  function ajustar() {
+    const c = rapidas.find((x) => x.id === sel.value);
+    const f = c.campos[0];
+    $('#br-rotulo').firstChild.textContent = f.rotulo;
+    input.placeholder = f.placeholder || '';
+    input.value = '';
+    input.oninput = f.mascara ? () => { input.value = mascaras[f.mascara](input.value); } : null;
+  }
+  sel.addEventListener('change', ajustar);
+  ajustar();
+  $('#busca-rapida').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = rapidas.find((x) => x.id === sel.value);
+    location.href = `consulta?id=${c.id}&${c.campos[0].nome}=${encodeURIComponent(input.value)}`;
+  });
+</script>
+</body>
+</html>

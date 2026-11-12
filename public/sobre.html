@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sobre nos | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container">
+      <div class="trilha"><a href="./">Inicio</a> / Sobre</div>
+      <h1>Sobre nos</h1>
+      <p>Simplificamos o acesso a informacoes publicas e licenciadas, com responsabilidade e respeito a privacidade.</p>
+    </div>
+  </section>
+  <section class="secao">
+    <div class="container">
+      <div class="grade grade-2" style="gap:40px;align-items:center">
+        <div>
+          <span class="sobrelinha">Nossa missao</span>
+          <h2>Dados confiaveis, de forma simples e legal</h2>
+          <p class="muted">Empresas, contadores, despachantes e revendedores de veiculos precisam consultar informacoes todos os dias. Reunimos essas consultas em um so lugar, com fontes oficiais, precos claros e um historico organizado.</p>
+          <p class="muted">Acreditamos que acesso a dados e responsabilidade andam juntos. Por isso cada consulta de dados pessoais exige finalidade e fica registrada, como determina a LGPD.</p>
+        </div>
+        <img class="ilustra" src="img/ilustracoes/empresas.svg" alt="" width="480" height="300">
+      </div>
+      <div class="grade grade-4" id="valores" style="margin-top:40px"></div>
+    </div>
+  </section>
+  <section class="secao">
+    <div class="container">
+      <div class="cta">
+        <div><h2>Quer integrar via API?</h2><p>Fale com a gente sobre o plano Empresarial.</p></div>
+        <a class="btn btn-clara" href="contato?assunto=Parcerias%20e%20API">Falar com vendas</a>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module">
+  import { icone } from './js/layout.js';
+  document.getElementById('valores').innerHTML = [
+    ['escudo', 'Legalidade', 'Somente fontes oficiais e licenciadas.'],
+    ['cadeado', 'Privacidade', 'Minimo de dados, maximo de protecao.'],
+    ['raio', 'Agilidade', 'Respostas em segundos.'],
+    ['moeda', 'Transparencia', 'Preco claro antes de cada consulta.'],
+  ].map(([i, t, d]) => `<div class="card"><div class="icone-box" style="margin-bottom:12px">${icone(i)}</div><h3>${t}</h3><p class="muted" style="margin:0;font-size:14px">${d}</p></div>`).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg-financeiro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <linearGradient id="az-financeiro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4da3ff"/><stop offset="1" stop-color="#1660d6"/>
+    </linearGradient>
+    <linearGradient id="lj-financeiro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb27a"/><stop offset="1" stop-color="#ff6b1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="300" fill="url(#bg-financeiro)"/>
+  <circle cx="422.4" cy="36" r="70" fill="#4da3ff" opacity=".18"/>
+  <circle cx="38.4" cy="270" r="90" fill="#ff6b1a" opacity=".10"/>
+  <ellipse cx="240" cy="266" rx="172.79999999999998" ry="14" fill="#0b2559" opacity=".08"/>
+  
+    <rect x="80" y="70" width="230" height="170" rx="14" fill="#ffffff" stroke="#c9d6ec" stroke-width="2"/>
+    <rect x="104" y="170" width="20" height="50" rx="4" fill="url(#az-financeiro)"/><rect x="136" y="140" width="20" height="80" rx="4" fill="url(#az-financeiro)"/><rect x="168" y="154" width="20" height="66" rx="4" fill="url(#az-financeiro)"/><rect x="200" y="110" width="20" height="110" rx="4" fill="url(#az-financeiro)"/><rect x="232" y="128" width="20" height="92" rx="4" fill="url(#az-financeiro)"/><rect x="264" y="90" width="20" height="130" rx="4" fill="url(#lj-financeiro)"/>
+    <path d="M104 150 L136 128 L168 140 L200 104 L232 116 L264 82" fill="none" stroke="#0b2559" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(360 150)">
+      <circle r="58" fill="url(#lj-financeiro)"/>
+      <circle r="44" fill="none" stroke="#fff" stroke-width="3" opacity=".6"/>
+      <text y="14" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" font-weight="800" fill="#fff">R$</text>
+    </g>
+    <rect x="300" y="226" width="120" height="30" rx="8" fill="#0b2559"/>
+    <text x="360" y="246" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#fff">SELIC  CDI  USD</text>
+</svg>

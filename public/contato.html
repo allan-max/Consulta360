@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contato | Consulta360</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b2559">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<main>
+  <section class="cabecalho">
+    <div class="container">
+      <div class="trilha"><a href="./">Inicio</a> / Contato</div>
+      <h1>Fale conosco</h1>
+      <p>Duvidas, sugestoes, parcerias ou pedidos sobre seus dados. Respondemos em ate 1 dia util.</p>
+    </div>
+  </section>
+  <div class="container" style="padding:48px 20px 72px">
+    <div class="grade" style="grid-template-columns:1fr 1.4fr;gap:24px" id="grade-contato">
+      <div class="grade" style="align-content:start">
+        <div class="card cat-card"><div class="icone-box" id="ic1"></div><div><h3>E-mail</h3><span>contato@seudominio.com.br</span></div></div>
+        <div class="card cat-card"><div class="icone-box" id="ic2"></div><div><h3>Atendimento</h3><span>Segunda a sexta, 9h as 18h</span></div></div>
+        <div class="card cat-card"><div class="icone-box" id="ic3"></div><div><h3>Encarregado de dados (DPO)</h3><span>dpo@seudominio.com.br</span></div></div>
+      </div>
+      <form class="card form" id="form" novalidate>
+        <h3 style="margin:0">Envie uma mensagem</h3>
+        <div class="grade grade-2">
+          <label>Nome <input name="nome" required></label>
+          <label>E-mail <input name="email" type="email" required></label>
+        </div>
+        <label>Assunto
+          <select name="assunto" id="assunto">
+            <option>Duvida sobre consulta</option>
+            <option>Pagamento e creditos</option>
+            <option>Recuperar senha</option>
+            <option>Exclusao de dados</option>
+            <option>Direitos do titular (LGPD)</option>
+            <option>Parcerias e API</option>
+            <option>Outro</option>
+          </select>
+        </label>
+        <label>Mensagem <textarea name="texto" required></textarea></label>
+        <div id="msg"></div>
+        <button class="btn btn-primaria" type="submit">Enviar mensagem</button>
+      </form>
+    </div>
+  </div>
+</main>
+<script type="module">
+  import { api, icone, esc, usuarioAtual, $ } from './js/layout.js';
+  $('#ic1').innerHTML = icone('email');
+  $('#ic2').innerHTML = icone('relogio');
+  $('#ic3').innerHTML = icone('escudo');
+  if (matchMedia('(max-width: 760px)').matches) $('#grade-contato').style.gridTemplateColumns = '1fr';
+
+  const assunto = new URLSearchParams(location.search).get('assunto');
+  if (assunto) $('#assunto').value = assunto;
+  const u = await usuarioAtual();
+  if (u) { $('#form').nome.value = u.nome; $('#form').email.value = u.email; }
+
+  $('#form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    try {
+      await api('/contato', { metodo: 'POST', corpo: Object.fromEntries(new FormData(e.target)) });
+      $('#msg').innerHTML = `<div class="alerta alerta-ok">${icone('check')} Mensagem enviada! Responderemos em breve.</div>`;
+      e.target.texto.value = '';
+    } catch (err) {
+      $('#msg').innerHTML = `<div class="alerta alerta-erro">${esc(err.message)}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
