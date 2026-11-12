@@ -16,15 +16,25 @@ async function consultar(id, entrada) {
   if (!c.caminho) throw erro(AVISO_ESTATICO, 503);
 
   const caminho = c.caminho(entrada ?? {}); // valida e lanca erro com mensagem amigavel
-  let r;
-  try {
-    r = await fetch(`${BRASIL_API}${caminho}`, { signal: AbortSignal.timeout(15000) });
-  } catch {
-    throw erro('Nao foi possivel conectar a fonte de dados. Tente novamente.', 502);
+  const fontes = [`${BRASIL_API}${caminho}`];
+  if (c.alternativa) fontes.push(c.alternativa(entrada ?? {}));
+
+  // Tenta cada fonte. Falha de rede/CORS ou erro 5xx/429 passa para a proxima;
+  // 4xx (ex.: documento nao encontrado) e resposta definitiva.
+  let ultimoErro = erro('Nao foi possivel conectar a fonte de dados. Tente novamente.', 502);
+  for (const url of fontes) {
+    let r;
+    try {
+      r = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    } catch {
+      continue;
+    }
+    const corpo = await r.json().catch(() => ({}));
+    if (r.ok) return { consulta: id, dados: corpo, saldo: null };
+    ultimoErro = erro(corpo.message || corpo.errors?.[0]?.message || `Erro ${r.status} na fonte de dados`, r.status === 404 ? 404 : 502);
+    if (r.status < 500 && r.status !== 429) break;
   }
-  const corpo = await r.json().catch(() => ({}));
-  if (!r.ok) throw erro(corpo.message || corpo.errors?.[0]?.message || `Erro ${r.status} na fonte de dados`, r.status === 404 ? 404 : 502);
-  return { consulta: id, dados: corpo, saldo: null };
+  throw ultimoErro;
 }
 
 export async function apiEstatica(caminho, { metodo = 'GET', corpo } = {}) {

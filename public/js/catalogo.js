@@ -66,6 +66,11 @@ export const consultas = [
       exigir(cnpjValido(cnpj), 'CNPJ invalido.');
       return (`/cnpj/v1/${cnpj}`);
     },
+    // Reserva no navegador se a BrasilAPI falhar (Minha Receita: mesma base aberta
+    // da Receita Federal e os mesmos campos). URL completa.
+    alternativa({ cnpj }) {
+      return `https://minhareceita.org/${digitos(cnpj)}`;
+    },
   },
   {
     id: 'cpf', categoria: 'Pessoas', titulo: 'CPF - Situacao cadastral', fonte: 'licenciada', custo: 2,
